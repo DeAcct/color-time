@@ -83,7 +83,7 @@
     }
 
     &--smallized {
-      transform: translateY(-42vh);
+      transform: translateY(-41.5vh);
     }
   }
 </style>

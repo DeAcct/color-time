@@ -38,12 +38,16 @@
     }
   }
 
+  function resize() {}
+
   onDestroy(() => {
     document.body.style.overflowY = "scroll";
     unsubColorThemes;
     unsubisHexGroundOpen;
   });
 </script>
+
+<svelte:window on:resize={resize} />
 
 <div class="hex-gallery {isOpen ? 'hex-gallery--opened' : ''}">
   <div class="title" on:touchstart={touchStart} on:touchmove={touchMove}>
@@ -64,7 +68,7 @@
   .hex-gallery {
     position: fixed;
     top: 0;
-    transform: translateY(90vh);
+    transform: translateY(calc(100vh - 20rem));
     display: flex;
     flex-direction: column;
     align-items: center;
@@ -74,7 +78,7 @@
     border-radius: 1.5rem 1.5rem 0 0;
     transition: transform 500ms ease-out;
     &--opened {
-      transform: translateY(15vh);
+      transform: translateY(15rem);
     }
 
     &::before {
@@ -88,7 +92,7 @@
     }
     .title {
       width: 100%;
-      height: 10vh;
+      height: 15rem;
       display: flex;
       align-items: center;
       justify-content: center;
