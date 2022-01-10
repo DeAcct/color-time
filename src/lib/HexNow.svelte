@@ -43,7 +43,7 @@
   });
 </script>
 
-<div class="hex-now {isSmallize ? 'hex-now--smallized' : ''}">
+<div class="hex-now {isSmallize ? 'hex-now--reduced' : ''}">
   <h2 class="blind">시간</h2>
   <div class="row-top">
     <p class="hex-now__date">
@@ -82,8 +82,8 @@
       border-radius: 4rem;
     }
 
-    &--smallized {
-      transform: translateY(-41.5vh);
+    &--reduced {
+      transform: translateY(calc(-50vh + 8rem));
     }
   }
 </style>

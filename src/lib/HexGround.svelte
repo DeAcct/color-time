@@ -68,13 +68,13 @@
   .hex-gallery {
     position: fixed;
     top: 0;
-    transform: translateY(calc(100vh - 20rem));
+    transform: translateY(calc(100vh - 13rem));
     display: flex;
     flex-direction: column;
     align-items: center;
     width: 100%;
     background-color: var(--depth-900);
-    min-height: 85vh;
+    height: calc(100vh - 15rem);
     border-radius: 1.5rem 1.5rem 0 0;
     transition: transform 500ms ease-out;
     &--opened {
@@ -107,7 +107,7 @@
       flex-direction: column;
       align-items: center;
       width: 100%;
-      height: 75vh;
+      height: calc(100vh - 21rem);
       overflow-y: scroll;
       padding: 1rem 2rem 3rem;
     }
