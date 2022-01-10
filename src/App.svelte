@@ -1,24 +1,23 @@
 <script lang="ts">
+  import HexGround from "./lib/HexGround.svelte";
   import HexNow from "./lib/HexNow.svelte";
-
-  let hexColor: string;
-
-  function onHexChanged(e: CustomEvent) {
-    hexColor = e.detail;
-  }
+  import { hex } from "./store/stores";
 </script>
 
-<!--템플릿 작성-->
-<main style="background-color: {hexColor}">
-  <HexNow on:hexChanged={onHexChanged} />
+<h1 class="blind">컬러타임!</h1>
+<main style="background-color:{$hex};">
+  <HexNow />
+  <HexGround />
 </main>
 
-<style>
+<style lang="scss">
   main {
-    min-height: 100vh;
-    width: 100%;
     display: flex;
-    align-items: center;
+    flex-direction: column;
     justify-content: center;
+    align-items: center;
+    width: 100%;
+    height: 100vh;
+    transition: background-color 100ms ease-out;
   }
 </style>

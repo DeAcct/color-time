@@ -1,5 +1,5 @@
 @import url("https://fonts.googleapis.com/css2?family=IBM+Plex+Sans+KR:wght@100;300;500;700&display=swap");
-
+@import "./color.scss";
 html {
   font-size: 0.625em;
 }
@@ -13,6 +13,12 @@ aside,
 figure,
 figcaption,
 footer,
+h1,
+h2,
+h3,
+h4,
+h5,
+h6,
 form,
 fieldset,
 input,
@@ -50,4 +56,14 @@ dd {
 button {
   background-color: transparent;
   border: none;
+}
+
+.blind {
+  position: absolute;
+  width: 1px;
+  height: 1px;
+  clip: rect(1px 1px 1px 1px);
+  clip-path: inset(-50%);
+  overflow: hidden;
+  text-indent: -9999px;
 }

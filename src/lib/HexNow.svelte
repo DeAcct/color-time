@@ -1,22 +1,8 @@
 <script lang="ts">
-  import { createEventDispatcher, onMount } from "svelte";
-  const dispatch = createEventDispatcher();
+  import { onDestroy } from "svelte";
+
+  import { hex, colorData, isHexGroundOpen } from "../store/stores";
   let now = new Date();
-
-  onMount(() => {
-    const interval = setInterval(() => {
-      now = new Date();
-      dispatch("hexChanged", hex);
-    }, 1000);
-  });
-
-  //$는 watch와 비슷하다
-  const timeFormatter = (origin: number): string =>
-    origin >= 10 ? `${origin}` : `0${origin}`;
-  $: hour = timeFormatter(now.getHours());
-  $: min = timeFormatter(now.getMinutes());
-  $: sec = timeFormatter(now.getSeconds());
-  $: hex = `#${hour}${min}${sec}`;
 
   const getWhatDay = (origin: number): string => {
     switch (origin) {
@@ -42,45 +28,62 @@
   $: day = getWhatDay(now.getDay());
   $: yymmddDay = `${year}년 ${month}월 ${date}일 ${day}요일`;
 
-  let success: string = "";
-
-  async function share() {
-    try {
-      await navigator.share({
-        title: document.title,
-        text: `${hex}... I like it!`,
-        url: "https://colortime.hyse.kr",
-      });
-      success = "성공!";
-    } catch {
-      success = "공유 창을 열지 못했어요ㅠㅠ";
-    }
+  function colorAppend() {
+    colorData.update((data) => [$hex, ...data]);
+    localStorage.setItem("groundColorItem", JSON.stringify($colorData));
   }
+
+  let isSmallize: boolean;
+  const unsubisHexGroundOpen = isHexGroundOpen.subscribe((value) => {
+    isSmallize = value;
+  });
+
+  onDestroy(() => {
+    unsubisHexGroundOpen;
+  });
 </script>
 
-<div class="hex-now" aria-live="polite">
-  <div class="col-top">
-    <p class="hex-now__date">{yymmddDay}</p>
-    <strong class="hex-now__time"> {hex} </strong>
+<div class="hex-now {isSmallize ? 'hex-now--smallized' : ''}">
+  <h2 class="blind">시간</h2>
+  <div class="row-top">
+    <p class="hex-now__date">
+      {yymmddDay}
+    </p>
+    <strong class="hex-now__time" aria-live="polite"> {$hex} </strong>
   </div>
-  <button on:click={share} class="hex-now__share-btn"
-    >색상 공유 {success}</button
-  >
+  <button class="hex-now__append" on:click={colorAppend}>
+    이 컬러 기억하기
+  </button>
 </div>
 
 <style lang="scss">
   .hex-now {
+    display: flex;
+    position: fixed;
+    width: calc(100% - 4rem);
+    justify-content: space-between;
+    transition: 500ms ease-out;
+
     &__date {
       font-size: 1.3rem;
       font-weight: 500;
+      color: #fff;
     }
     &__time {
-      color: #fff;
       font-weight: 100;
-      font-size: 6rem;
+      font-size: 4rem;
+      display: flex;
+      flex-direction: column;
     }
-    &__share-btn {
-      font-size: 1.1rem;
+    &__append {
+      align-self: center;
+      padding: 1rem 1.5rem;
+      background-color: rgba(255, 255, 255, 0.3);
+      border-radius: 4rem;
+    }
+
+    &--smallized {
+      transform: translateY(-42vh);
     }
   }
 </style>

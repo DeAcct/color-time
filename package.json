@@ -4,8 +4,8 @@
   "type": "module",
   "scripts": {
     "dev": "vite",
-    "predeploy": "vite build",
     "preview": "vite preview",
+    "predeploy": "vite build && echo colortime.hyse.kr > ./dist/CNAME && echo CNAME created (colortime.hyse.kr)",
     "deploy": "gh-pages -d dist",
     "check": "svelte-check --tsconfig ./tsconfig.json"
   },
