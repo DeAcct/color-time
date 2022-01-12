@@ -1,5 +1,7 @@
 <script lang="ts">
   import { onDestroy } from "svelte";
+  import { slide } from "svelte/transition";
+  import { quintOut } from "svelte/easing";
 
   import { hex, colorData, isHexGroundOpen } from "../store/stores";
   let now = new Date();
@@ -28,8 +30,9 @@
   $: day = getWhatDay(now.getDay());
   $: yymmddDay = `${year}년 ${month}월 ${date}일 ${day}요일`;
 
+  let hexID = 0;
   function colorAppend() {
-    colorData.update((data) => [$hex, ...data]);
+    colorData.update((data) => [{ hexID: hexID++, color: $hex }, ...data]);
     localStorage.setItem("groundColorItem", JSON.stringify($colorData));
   }
 
@@ -49,7 +52,15 @@
     <p class="hex-now__date">
       {yymmddDay}
     </p>
-    <strong class="hex-now__time" aria-live="polite"> {$hex} </strong>
+    {#key $hex}
+      <strong
+        class="hex-now__time"
+        aria-live="polite"
+        transition:slide={{ duration: 300, easing: quintOut }}
+      >
+        {$hex}
+      </strong>
+    {/key}
   </div>
   <button class="hex-now__append" on:click={colorAppend}>
     이 컬러 기억하기
@@ -60,7 +71,10 @@
   .hex-now {
     display: flex;
     position: fixed;
-    width: calc(100% - 4rem);
+    width: 100%;
+    height: 8rem;
+    overflow: hidden;
+    padding: 0 2rem;
     justify-content: space-between;
     transition: 500ms ease-out;
 
@@ -84,6 +98,13 @@
 
     &--reduced {
       transform: translateY(calc(-50vh + 8rem));
+    }
+  }
+  @media screen and (min-width: 1080px) {
+    .hex-now {
+      position: static;
+      max-width: 600px;
+      margin-bottom: 3rem;
     }
   }
 </style>

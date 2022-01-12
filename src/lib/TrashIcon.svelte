@@ -1,0 +1,16 @@
+<svg
+  xmlns="http://www.w3.org/2000/svg"
+  viewBox="0 0 24 24"
+  role="presentation"
+  class="blind"
+>
+  <defs>
+    <symbol viewBox="0 0 24 24" id="trash-icon">
+      <path
+        d="M19,6H16V3a1,1,0,0,0-1-1H9A1,1,0,0,0,8,3V6H5A1,1,0,0,0,5,8H6V20a2,2,0,0,0,2,2h8a2,2,0,0,0,2-2V8h1a1,1,0,0,0,0-2ZM10,4h4V6H10Zm6,16H8V8h8Z"
+      />
+      <path d="M10,11a1,1,0,0,0-1,1v4a1,1,0,0,0,2,0V12A1,1,0,0,0,10,11Z" />
+      <path d="M14,11a1,1,0,0,0-1,1v4a1,1,0,0,0,2,0V12A1,1,0,0,0,14,11Z" />
+    </symbol>
+  </defs>
+</svg>
