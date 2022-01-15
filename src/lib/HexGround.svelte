@@ -2,6 +2,7 @@
   import { onDestroy, onMount } from "svelte";
   import { colorData, isHexGroundOpen } from "../store/stores";
   import HexItem from "./HexItem.svelte";
+  import ShareIcon from "./ShareIcon.svelte";
   import TrashIcon from "./TrashIcon.svelte";
 
   let colorItems: any[];
@@ -16,6 +17,13 @@
       colorData.update(() => [...localColorItem]);
     }
   });
+  function onDelete(e: CustomEvent<HTMLElement>) {
+    colorItems = colorItems.filter(
+      (colorItem) => colorItem.hexID !== Number(e.detail.dataset.key)
+    );
+    colorData.update(() => [...colorItems]);
+    localStorage.setItem("groundColorItem", JSON.stringify(colorItems));
+  }
 
   let oldTouch: number;
   let isOpen: boolean;
@@ -35,17 +43,28 @@
     }
   }
 
-  // function hexItemRootFinder(node: Node){
-  //   for (let result = node; node === )
-  // }
-
-  function onDelete(e: CustomEvent) {
-    console.log(e.detail.dataset.key, colorItems[0].hexID);
-    colorItems = colorItems.filter(
-      (colorItem) => colorItem.hexID !== Number(e.detail.dataset.key)
-    );
-    colorData.update(() => [...colorItems]);
+  let isMultiSelectMode: boolean;
+  let multiSelectedItems: number;
+  function onHexItemSelect(e: CustomEvent<HTMLElement>) {
+    colorItems.forEach((colorItem) => {
+      if (colorItem.hexID === Number(e.detail.dataset.key)) {
+        colorItem.isSelected = !colorItem.isSelected;
+      }
+    });
+    multiSelectedItems = colorItems.filter(
+      (colorItem) => colorItem.isSelected
+    ).length;
+    if (!isMultiSelectMode) {
+      isMultiSelectMode = true;
+    } else if (multiSelectedItems === 0) {
+      isMultiSelectMode = false;
+    }
+    colorData.update(() => colorItems);
+  }
+  function multiDelete() {
+    colorItems = colorItems.filter((colorItem) => !colorItem.isSelected);
     localStorage.setItem("groundColorItem", JSON.stringify(colorItems));
+    isMultiSelectMode = false;
   }
 
   onDestroy(() => {
@@ -62,12 +81,26 @@
     on:touchmove={touchMove}
   >
     <h2>컬러그라운드</h2>
+    {#if isMultiSelectMode}
+      <button class="delete-btn" on:click={multiDelete}>
+        선택한 색 삭제하기
+      </button>
+    {/if}
   </div>
   {#if colorItems.length !== 0}
     <TrashIcon />
+    <ShareIcon />
+    <!--svg <use> 재활용 용도-->
     <ul class="hex-list">
       {#each colorItems as color}
-        <HexItem color={color.color} key={color.hexID} on:delete={onDelete} />
+        <HexItem
+          color={`#${color.color.hour}${color.color.min}${color.color.sec}`}
+          key={color.hexID}
+          isSelected={color.isSelected}
+          {isMultiSelectMode}
+          on:delete={onDelete}
+          on:hexItemSelect={onHexItemSelect}
+        />
       {/each}
     </ul>
   {:else}
@@ -103,14 +136,22 @@
     }
     &__title {
       width: 100%;
-      padding: 5rem 0;
+      padding: 4.5rem 0;
+      min-height: 17rem;
       display: flex;
+      flex-direction: column;
       align-items: center;
       justify-content: center;
       h2 {
         color: var(--text-900);
         transform: translateY(0.5rem);
         font-size: 1.7rem;
+      }
+      .delete-btn {
+        margin-top: 1.5rem;
+        padding: 1rem 1.5rem;
+        border-radius: 5rem;
+        background-color: var(--selected-700);
       }
     }
     .hex-list {
@@ -123,6 +164,7 @@
       overflow-x: hidden;
       padding: 1rem 2rem 3rem;
     }
+
     &__alert {
       color: var(--text-900);
     }

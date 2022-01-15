@@ -1,5 +1,5 @@
 <script lang="ts">
-  import { onDestroy } from "svelte";
+  import { onDestroy, onMount } from "svelte";
   import { slide } from "svelte/transition";
   import { quintOut } from "svelte/easing";
 
@@ -31,9 +31,26 @@
   $: yymmddDay = `${year}년 ${month}월 ${date}일 ${day}요일`;
 
   let hexID = 0;
+  onMount(() => {
+    if (localStorage.getItem("hexID")) {
+      hexID = JSON.parse(localStorage.getItem("hexID"));
+    }
+  });
   function colorAppend() {
-    colorData.update((data) => [{ hexID: hexID++, color: $hex }, ...data]);
+    colorData.update((data) => [
+      {
+        hexID: hexID++,
+        color: {
+          hour: $hex.hour,
+          min: $hex.min,
+          sec: $hex.sec,
+        },
+        isSelected: false,
+      },
+      ...data,
+    ]);
     localStorage.setItem("groundColorItem", JSON.stringify($colorData));
+    localStorage.setItem("hexID", JSON.stringify(hexID));
   }
 
   let isSmallize: boolean;
@@ -52,15 +69,30 @@
     <p class="hex-now__date">
       {yymmddDay}
     </p>
-    {#key $hex}
-      <strong
-        class="hex-now__time"
-        aria-live="polite"
-        transition:slide={{ duration: 300, easing: quintOut }}
-      >
-        {$hex}
-      </strong>
-    {/key}
+
+    <strong class="hex-now__time" aria-live="polite">
+      <span class="number">
+        {#key $hex.hour}
+          <span transition:slide={{ duration: 300, easing: quintOut }}>
+            #{$hex.hour}:
+          </span>
+        {/key}
+      </span>
+      <span class="number">
+        {#key $hex.min}
+          <span transition:slide={{ duration: 300, easing: quintOut }}>
+            {$hex.min}:
+          </span>
+        {/key}
+      </span>
+      <span class="number">
+        {#key $hex.sec}
+          <span transition:slide={{ duration: 300, easing: quintOut }}>
+            {$hex.sec}
+          </span>
+        {/key}
+      </span>
+    </strong>
   </div>
   <button class="hex-now__append" on:click={colorAppend}>
     이 컬러 기억하기
@@ -87,7 +119,10 @@
       font-weight: 100;
       font-size: 4rem;
       display: flex;
-      flex-direction: column;
+      .number {
+        display: flex;
+        flex-direction: column;
+      }
     }
     &__append {
       align-self: center;
