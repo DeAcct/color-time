@@ -63,6 +63,7 @@
   }
   function multiDelete() {
     colorItems = colorItems.filter((colorItem) => !colorItem.isSelected);
+    colorData.update(() => colorItems);
     localStorage.setItem("groundColorItem", JSON.stringify(colorItems));
     isMultiSelectMode = false;
   }
