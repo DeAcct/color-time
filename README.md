@@ -4,7 +4,7 @@
 
 <a href="https://www.jacopocolo.com/hexclock/">https://www.jacopocolo.com/hexclock/</a>
 
-위 사이트의 컨셉을 가져와 날짜표시, 색상 공유, todo list 기능을 추가할 예정입니다.
+위 사이트의 컨셉을 가져와 날짜표시, 마음에 드는 컬러 저장, 공유 기능을 추가했습니다.
 
 ## stacks
 
